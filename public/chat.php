@@ -94,13 +94,13 @@ $name = e($r["first_name"].(isset($r["last_name"]) ? " ".$r["last_name"] : ""));
 
 <?php endwhile;
 
-if ($i === 0) {
+if ($i === 0 && (isset($_GET["p"]) || isset($_GET["n"]))) {
 	header("Location: /chat.php?id={$_GET["id"]}");
 	exit;
 }
 
 $out = ob_get_clean();
-ob_start(); ?><hr/>page: <a href="/chat.php?id=<?= e($_GET["id"]); ?>&n=<?= $lastId; ?>">next (older)</a><?php if ($firstId !== -1 && (isset($_GET["n"]) || isset($_GET["p"])) && $i === $limit) { ?> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>&p=<?= $firstId; ?>">prev (newer)</a> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>">latest</a><?php } ?><hr/><?php $paginator = ob_get_clean(); ?>
+ob_start(); ?><hr/>page: <a href="/chat.php?id=<?= e($_GET["id"]); ?>&n=<?= $lastId; ?>">next (older)</a><?php if ($firstId !== -1 && (isset($_GET["n"]) || isset($_GET["p"])) && $i === $limit) { ?> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>&p=<?= $firstId; ?>">prev (newer)</a> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>">latest</a><?php } ?><hr/><?php $paginator = ob_get_clean(); if ($lastId === $firstId && $lastId === -1) $paginator = ""; ?>
 <?= $paginator; ?>
 <?= $out; ?>
 <?= $paginator; ?>
