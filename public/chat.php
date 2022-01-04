@@ -9,15 +9,15 @@ if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
 $limit = 30;
 $order = "DESC";
 $ltQuery = "";
-if (isset($_GET["n"]) && is_numeric($_GET["n"])) {
-	$n = (int) $_GET["n"];
-	if ($n == -1)
+if (isset($_GET["n"]) && is_string($_GET["n"])) {
+	$n = hexdec($_GET["n"]);
+	if ($n == -1 || $n == 0)
 		unset($_GET["n"]);
 	else
 		$ltQuery = " AND gt_messages.tg_msg_id < {$n}";
-} else if (isset($_GET["p"]) && is_numeric($_GET["p"])) {
-	$p = (int) $_GET["p"];
-	if ($p == -1) {
+} else if (isset($_GET["p"]) && is_string($_GET["p"])) {
+	$p = hexdec($_GET["p"]);
+	if ($p == -1 || $p == 0) {
 		unset($_GET["p"]);
 	} else {
 		$order = "ASC";
@@ -88,7 +88,7 @@ $name = e($r["first_name"].(isset($r["last_name"]) ? " ".$r["last_name"] : ""));
 
 ?>
 
-<b><?= date("c", strtotime($r["tg_date"])); ?>, msg_id:<?= e($r["tg_msg_id"])?>, <?= $name ?> wrote:</b>
+<b><?= date("c", strtotime($r["tg_date"])); ?>, msg_id:<?= e(dechex($r["tg_msg_id"]))?>, <?= $name ?> wrote:</b>
 <?= e(wordwrap($r["text"], 80)); ?>
 
 
@@ -100,7 +100,7 @@ if ($i === 0 && (isset($_GET["p"]) || isset($_GET["n"]))) {
 }
 
 $out = ob_get_clean();
-ob_start(); ?><hr/>page: <a href="/chat.php?id=<?= e($_GET["id"]); ?>&n=<?= $lastId; ?>">next (older)</a><?php if ($firstId !== -1 && (isset($_GET["n"]) || isset($_GET["p"])) && $i === $limit) { ?> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>&p=<?= $firstId; ?>">prev (newer)</a> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>">latest</a><?php } ?><hr/><?php $paginator = ob_get_clean(); if ($lastId === $firstId && $lastId === -1) $paginator = ""; ?>
+ob_start(); ?><hr/>page: <a href="/chat.php?id=<?= e($_GET["id"]); ?>&n=<?= dechex($lastId); ?>">next (older)</a><?php if ($firstId !== -1 && (isset($_GET["n"]) || isset($_GET["p"])) && $i === $limit) { ?> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>&p=<?= dechex($firstId); ?>">prev (newer)</a> | <a href="/chat.php?id=<?= e($_GET["id"]); ?>">latest</a><?php } ?><hr/><?php $paginator = ob_get_clean(); if ($lastId === $firstId && $lastId === -1) $paginator = ""; ?>
 <?= $paginator; ?>
 <?= $out; ?>
 <?= $paginator; ?>
