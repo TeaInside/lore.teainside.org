@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+*.o
+*.so
+*.swo
+*.swp
+*.tmp
+*.lock
+/*.patch
+/config.php
